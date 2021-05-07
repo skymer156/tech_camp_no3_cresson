@@ -4,5 +4,5 @@
 name : bless you
 
 # architecture
-controller : Android application
+controller : Android application  
 hardware : ESP32
