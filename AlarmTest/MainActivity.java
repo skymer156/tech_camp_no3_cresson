@@ -115,7 +115,10 @@ public class MainActivity extends AppCompatActivity {
 
     // 登録
     private void register(long alarmTimeMillis) {
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Context context = getBaseContext();
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+//        Intent intent = new Intent(context,AlarmReceiver.class);
+//        PendingIntent pendingIntent = PendingIntent.getActivity(context,0,intent,0);
         PendingIntent pendingIntent = getPendingIntent();
         alarmManager.setAlarmClock(new AlarmManager.AlarmClockInfo(alarmTimeMillis, null), pendingIntent);
         // 保存
