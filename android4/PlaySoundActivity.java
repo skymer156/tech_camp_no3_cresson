@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -24,6 +25,7 @@ import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
 
@@ -42,6 +44,9 @@ public class PlaySoundActivity extends AppCompatActivity {
 
     private BluetoothAdapter mAdapter;
     static final String TAG = "BTTEST1";
+
+    private  CountDownTimer mCountDownTimer;
+    private long mTimerLeftInMillis = START_TIME;
 
     private Handler mHandler = new Handler();
 
@@ -70,7 +75,9 @@ public class PlaySoundActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alarm);
-        stopButton = findViewById(R.id.button);
+        stopButton = findViewById(R.id.timeButton2);
+
+        startTimer();
 
         // Android端末がbluetoothを使用できるかの確認処理
         BluetoothManager bluetoothManager = (BluetoothManager)getSystemService(Context.BLUETOOTH_SERVICE);
@@ -231,5 +238,33 @@ public class PlaySoundActivity extends AppCompatActivity {
             handler.obtainMessage(MESSAGE_BT, "DISCONNECTED - Exit BTClient Thread").sendToTarget();
         }
     }
-    
+
+    private void startTimer(){
+        mCountDownTimer = new CountDownTimer(START_TIME, 1000){
+            @Override
+            public void onTick(long millisUntilFinished){
+                mTimerLeftInMillis = millisUntilFinished;
+                updateCountDownText();
+            }
+
+            @Override
+            public void onFinish(){
+                stopButton.setText("時 間\n切 れ");
+                // Bluetooth起動
+                btClientThread = new BTClientThread();
+                btClientThread.start();
+
+            }
+        }.start();
+
+    }
+
+    private void updateCountDownText() {
+        int minutes = (int) (mTimerLeftInMillis / 1000) / 60;
+        int seconds = (int) (mTimerLeftInMillis / 1000) % 60;
+        String timerLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
+        stopButton.setText(timerLeftFormatted);
+    }
+
+
 }

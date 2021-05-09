@@ -91,7 +91,6 @@ public class MainActivity extends AppCompatActivity {
 
         textView1 = findViewById(R.id.textView1);
         textView2 = findViewById(R.id.textView2);
-        timeButtonView2 = findViewById(R.id.timeButton2);
 
         BluetoothManager bluetoothManager = (BluetoothManager)getSystemService(Context.BLUETOOTH_SERVICE);
         mAdapter = bluetoothManager.getAdapter();
@@ -146,6 +145,8 @@ public class MainActivity extends AppCompatActivity {
                                 alarmCalendar.set(Calendar.SECOND, 0);
                                 DateFormat df = new SimpleDateFormat("HH:mm");
                                 timeButtonView1.setText(df.format(alarmCalendar.getTime()));
+                                register(alarmCalendar.getTimeInMillis());
+                                alertSwitch.setChecked(true);
 
                             }
                         }, hour, minute, true);
